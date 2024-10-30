@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slayer Assistant Settings</title>
+    <link rel="icon" href="../images/icon.png" type="image/png">
+    <link rel="stylesheet" href="../styles/default/settings.css">
+</head>
+
+<body class="nis">
+
+    <h2 class="nistext">Settings</h2>
+
+    <div class="preset-container">
+        <!-- Presets will be dynamically added here -->
+    </div>
+
+    <div class="nisbutton" id="changelog-button" onclick="closeSettings();">Close Settings</div>
+    <div id="copyright">Copyright &copy;2021 Unlishema Dragonsworn</div>
+
+    <script type="text/javascript">
+        function closeSettings() {
+            window.close();
+        }
+
+        function getPresetIndex(index) {
+            return String(index).padStart(2, '0');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            for (let i = 1; i <= 18; i++) {
+                addPreset(i);
+                const presetData = localStorage.getItem(`preset-${getPresetIndex(i)}`);
+                if (presetData) displayImage(presetData, `image-preview-${getPresetIndex(i)}`);
+            }
+        });
+
+        function displayImage(src, imgElementId) {
+            const imgElement = document.getElementById(imgElementId);
+            imgElement.src = src;
+            imgElement.style.display = 'block';
+        }
+
+        async function urlToBase64(url, index) {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const img = new Image();
+
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                let width = img.width, height = img.height;
+
+                if (width > height && width > 48) {
+                    height *= 48 / width;
+                    width = 48;
+                } else if (height > width && height > 48) {
+                    width *= 48 / height;
+                    height = 48;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const base64String = canvas.toDataURL('image/png');
+                localStorage.setItem(`preset-${getPresetIndex(index)}`, base64String);
+                displayImage(base64String, `image-preview-${getPresetIndex(index)}`);
+            };
+
+            img.src = URL.createObjectURL(blob);
+        }
+
+        function addPreset(index) {
+            const presetContainer = document.querySelector('.preset-container');
+            const presetDiv = document.createElement('div');
+            presetDiv.classList.add('preset');
+
+            presetDiv.innerHTML = `
+                <div class="preset-header">
+                    <label class="nistext">Preset ${index}</label>
+                    <img id="image-preview-${getPresetIndex(index)}" style="display: none; max-width: 48px; max-height: 48px;" alt="Image Preview">
+                </div>
+                <div class="preset-input">
+                    <input type="text" id="preset-${getPresetIndex(index)}" placeholder="Enter URL">
+                    <button id="import-${getPresetIndex(index)}">Import</button>
+                </div>
+                <div class="preset-file">
+                    <input type="file" id="preset-file-${getPresetIndex(index)}" accept="image/png">
+                </div>
+            `;
+
+            presetContainer.appendChild(presetDiv);
+
+            // Event listeners for the new preset
+            document.getElementById(`preset-${getPresetIndex(index)}`).addEventListener("keypress", function (e) {
+                if (e.key === 'Enter') urlToBase64(this.value, index);
+            });
+
+            document.getElementById(`import-${getPresetIndex(index)}`).addEventListener("click", function () {
+                urlToBase64(document.getElementById(`preset-${getPresetIndex(index)}`).value, index);
+            });
+
+            document.getElementById(`preset-file-${getPresetIndex(index)}`).addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const base64String = e.target.result;
+                        localStorage.setItem(`preset-${getPresetIndex(index)}`, base64String);
+                        displayImage(base64String, `image-preview-${getPresetIndex(index)}`);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

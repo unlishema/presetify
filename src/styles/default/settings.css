@@ -1,0 +1,31 @@
+/* Global Settings */ 
+.nis { background: url("../../images/background.png"); } 
+.nistext { color: #E5E6EB; } 
+a { color: #ffffff; text-decoration: underline; cursor: pointer; } 
+a:hover { color: #a19100; }
+
+/* Buttons */ 
+.nisbutton { position: relative; height: 32px; cursor: pointer; text-align: center; color: #000; font-family: 'trajan-pro-3'; font-size: 18px; text-shadow: 1px 1px 2px #ECC622; margin: 5px; padding: 0 12px; line-height: 32px; user-select: none; background: url('../../images/nisbutton.png') 0 -100%/24px 400% repeat; } 
+.nisbutton:hover { background-position: 0 -300%; }
+
+/* Main Settings */ 
+body { font-family: sans-serif; font-size: 14px; overflow-x: hidden; margin: 5px; width: calc(100% - 10px); } 
+h2 { border-top: 1px solid #000; font-size: 32px; font-weight: bold; text-align: center; margin: 5px 0; }
+
+/* Preset Container */ 
+.preset-container { display: flex; flex-wrap: wrap; gap: 5px; }
+.preset { background-color: rgba(0, 0, 0, 0.5); border: 1px solid #333; padding: 5px; border-radius: 5px; width: calc(50% - 15px); } 
+.preset-header { display: flex; height: 48px; align-items: center; justify-content: space-between; } 
+.preset-input { display: flex; align-items: center; margin-top: 10px; } 
+.preset-file { margin-top: 10px; }
+
+/* Input and Button Styling */ 
+input[type="text"], input[type="file"] { margin-right: 5px; width: calc(100% - 5px); } 
+button { cursor: pointer; background-color: #555; color: #fff; border: none; padding: 5px 10px; font-size: 14px; } 
+button:hover { background-color: #777; }
+
+/* Image Preview Styling */ 
+img { display: block; margin-top: 10px; max-width: 48px; max-height: 48px; }
+
+/* Credits */ 
+#copyright { font-size: 10px; color: #5a6400; text-align: center; padding-top: 3px; height: 20px; width: calc(100% - 10px); }
