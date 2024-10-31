@@ -7,7 +7,7 @@ const DEFAULT_IMAGE_URL = "./images/icon.png";
 const DEFAULT_IMAGE_WIDTH = 420;
 const DEFAULT_IMAGE_HEIGHT = 550;
 
-// Load images with webpack
+// Load base images with webpack
 let imgs = a1lib.webpackImages({
 	RS3_bank_presets: require("./images/data/bank/RS3_presets.data.png"),
 	RS3_disabled_preset: require("./images/data/bank/RS3_disabled_preset.data.png"),
@@ -15,10 +15,12 @@ let imgs = a1lib.webpackImages({
 	OS3_disabled_preset: require("./images/data/bank/OS3_disabled_preset.data.png"),
 });
 
+// Load in RS3 Preset Images
 let RS3_preset_imgs = {};
 for (let i = 1; i <= 18; i++) RS3_preset_imgs[`preset_${i.toString().padStart(2, '0')}`] = require(`./images/data/buttons/RS3_preset_${i.toString().padStart(2, '0')}.data.png`);
 RS3_preset_imgs = a1lib.webpackImages(RS3_preset_imgs);
 
+// Load in OS3 Preset Images
 let OS3_preset_imgs = {};
 for (let i = 1; i <= 18; i++) OS3_preset_imgs[`preset_${i.toString().padStart(2, '0')}`] = require(`./images/data/buttons/OS3_preset_${i.toString().padStart(2, '0')}.data.png`);
 OS3_preset_imgs = a1lib.webpackImages(OS3_preset_imgs);
@@ -69,7 +71,7 @@ function setupEventListeners() {
 }
 
 function loop() {
-	if (!window.alt1 || !alt1.permissionOverlay) return;
+	if (!window.alt1 || !alt1.permissionInstalled || !alt1.permissionOverlay || !alt1.rsActive) return;
 	const buffer = a1lib.captureHoldFullRs();
 	checkForPresets(buffer, imgs.RS3_bank_presets);
 	checkForPresets(buffer, imgs.OS3_bank_presets);
@@ -136,17 +138,11 @@ function openSettings() {
 	const top = window.screenY + (window.innerHeight / 2) - (DEFAULT_IMAGE_HEIGHT / 2);
 
 	const settingsWindow = window.open("./settings.html", "_blank", `width=${DEFAULT_IMAGE_WIDTH},height=${DEFAULT_IMAGE_HEIGHT},left=${left},top=${top}`);
-	settingsWindow?.window.console.warn("Settings Loaded!");
 
 	settingsWindow?.addEventListener('keyup', (e) => {
 		if ((e.which || e.keyCode) === 116) {
 			e.preventDefault(); // Prevent F5 key press from refreshing the page
 		}
-	});
-
-	settingsWindow?.addEventListener('beforeunload', () => {
-		console.warn("Settings Closed!");
-		settingsWindow?.window.console.warn("Settings Saved!");
 	});
 }
 

@@ -5,22 +5,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slayer Assistant Settings</title>
-    <link rel="icon" href="../images/icon.png" type="image/png">
-    <link rel="stylesheet" href="../styles/default/settings.css">
+    <link rel="icon" href="./images/icon.png" type="image/png">
+    <link rel="stylesheet" href="./styles/default/settings.css">
 </head>
 
 <body class="nis">
 
     <h2 class="nistext">Settings</h2>
 
+    <div>
+        <span class="nisbutton" id="import-button" onclick="importSettings();" style="margin-right: 23px;">
+            Import Settings
+        </span>
+        <span class="nisbutton" id="export-button" onclick="exportSettings();" style="margin-left: 23px;">
+            Export Settings
+
+        </span>
+    </div>
+
     <div class="preset-container">
         <!-- Presets will be dynamically added here -->
     </div>
 
-    <div class="nisbutton" id="changelog-button" onclick="closeSettings();">Close Settings</div>
+    <div class="nisbutton" id="close-button" onclick="closeSettings();">Close Settings</div>
     <div id="copyright">Copyright &copy;2021 Unlishema Dragonsworn</div>
 
     <script type="text/javascript">
+        function importSettings() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+
+            input.onchange = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        for (const key in data) {
+                            localStorage.setItem(key, data[key]);
+                        }
+                        alert('Settings imported successfully!');
+                        location.reload(); // Reload to apply changes
+                    } catch (error) {
+                        alert('Invalid JSON file format.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function exportSettings() {
+            const settings = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                settings[key] = localStorage.getItem(key);
+            }
+
+            const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'presetify-settings.json';
+            a.click();
+
+            URL.revokeObjectURL(url); // Clean up
+            alert('Settings exported successfully!');
+        }
+
         function closeSettings() {
             window.close();
         }
@@ -53,12 +109,12 @@
                 const ctx = canvas.getContext('2d');
                 let width = img.width, height = img.height;
 
-                if (width > height && width > 48) {
-                    height *= 48 / width;
-                    width = 48;
-                } else if (height > width && height > 48) {
-                    width *= 48 / height;
-                    height = 48;
+                if (width > height && width > 30) {
+                    height *= 30 / width;
+                    width = 30;
+                } else if (height > width && height > 30) {
+                    width *= 30 / height;
+                    height = 30;
                 }
 
                 canvas.width = width;
@@ -81,7 +137,7 @@
             presetDiv.innerHTML = `
                 <div class="preset-header">
                     <label class="nistext">${index === 0 ? `Disabled Presets` : `Preset ${index}`}</label>
-                    <img id="image-preview-${getPresetIndex(index)}" style="display: none; max-width: 48px; max-height: 48px;" alt="Image Preview">
+                    <img id="image-preview-${getPresetIndex(index)}" style="display: none; max-width: 30px; max-height: 30px;" alt="Image Preview">
                 </div>
                 <div class="preset-input">
                     <input type="text" id="preset-${getPresetIndex(index)}" placeholder="Enter URL">
