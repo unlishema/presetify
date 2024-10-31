@@ -4,7 +4,7 @@
 		"build": "webpack",
 		"watch": "webpack --watch",
 		"preclean": "node scripts/install-rimraf.js",
-		"clean": "rimraf dist",
+		"clean": "node scripts/clean-dist.js",
 		"tree": "node scripts/list-directories.js"
 	},
 	"dependencies": {
