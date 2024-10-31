@@ -2,38 +2,26 @@ import * as a1lib from "alt1";
 
 // Constants
 const NUM_PRESETS = 18;
+const DISABLED_PRESETS_URL = "./images/disabled-presets.png";
 const DEFAULT_IMAGE_URL = "./images/icon.png";
 const DEFAULT_IMAGE_WIDTH = 420;
 const DEFAULT_IMAGE_HEIGHT = 550;
 
 // Load images with webpack
 let imgs = a1lib.webpackImages({
-	bank_presets_1: require("./images/data/bank/presets_1.data.png"),
-	bank_presets_2: require("./images/data/bank/presets_2.data.png"),
+	RS3_bank_presets: require("./images/data/bank/RS3_presets.data.png"),
+	RS3_disabled_preset: require("./images/data/bank/RS3_disabled_preset.data.png"),
+	OS3_bank_presets: require("./images/data/bank/OS3_presets.data.png"),
+	OS3_disabled_preset: require("./images/data/bank/OS3_disabled_preset.data.png"),
 });
 
-// Construct preset images without Object.fromEntries
+let RS3_preset_imgs = {};
+for (let i = 1; i <= 18; i++) RS3_preset_imgs[`preset_${i.toString().padStart(2, '0')}`] = require(`./images/data/buttons/RS3_preset_${i.toString().padStart(2, '0')}.data.png`);
+RS3_preset_imgs = a1lib.webpackImages(RS3_preset_imgs);
 
-let preset_imgs = a1lib.webpackImages({
-	preset_01: require("./images/data/buttons/preset_01.data.png"),
-	preset_02: require("./images/data/buttons/preset_02.data.png"),
-	preset_03: require("./images/data/buttons/preset_03.data.png"),
-	preset_04: require("./images/data/buttons/preset_04.data.png"),
-	preset_05: require("./images/data/buttons/preset_05.data.png"),
-	preset_06: require("./images/data/buttons/preset_06.data.png"),
-	preset_07: require("./images/data/buttons/preset_07.data.png"),
-	preset_08: require("./images/data/buttons/preset_08.data.png"),
-	preset_09: require("./images/data/buttons/preset_09.data.png"),
-	preset_10: require("./images/data/buttons/preset_10.data.png"),
-	preset_11: require("./images/data/buttons/preset_11.data.png"),
-	preset_12: require("./images/data/buttons/preset_12.data.png"),
-	preset_13: require("./images/data/buttons/preset_13.data.png"),
-	preset_14: require("./images/data/buttons/preset_14.data.png"),
-	preset_15: require("./images/data/buttons/preset_15.data.png"),
-	preset_16: require("./images/data/buttons/preset_16.data.png"),
-	preset_17: require("./images/data/buttons/preset_17.data.png"),
-	preset_18: require("./images/data/buttons/preset_18.data.png")
-});
+let OS3_preset_imgs = {};
+for (let i = 1; i <= 18; i++) OS3_preset_imgs[`preset_${i.toString().padStart(2, '0')}`] = require(`./images/data/buttons/OS3_preset_${i.toString().padStart(2, '0')}.data.png`);
+OS3_preset_imgs = a1lib.webpackImages(OS3_preset_imgs);
 
 // Check if running inside Alt1
 if (window.alt1) {
@@ -63,12 +51,13 @@ async function initializeApp() {
 }
 
 async function setupDefaultImages() {
+	const disabledPresets = await convertImageToBase64(DISABLED_PRESETS_URL);
+	if (!localStorage.getItem(`disabled-presets`)) localStorage.setItem(`disabled-presets`, disabledPresets);
+
 	const defaultImage = await convertImageToBase64(DEFAULT_IMAGE_URL);
 	for (let i = 1; i <= NUM_PRESETS; i++) {
 		const preset = `preset-${String(i).padStart(2, '0')}`;
-		if (!localStorage.getItem(preset)) {
-			localStorage.setItem(preset, defaultImage);
-		}
+		if (!localStorage.getItem(preset)) localStorage.setItem(preset, defaultImage);
 	}
 }
 
@@ -80,48 +69,67 @@ function setupEventListeners() {
 }
 
 function loop() {
+	if (!window.alt1 || !alt1.permissionOverlay) return;
 	const buffer = a1lib.captureHoldFullRs();
-	checkForPresets(buffer, imgs.bank_presets_1);
-	checkForPresets(buffer, imgs.bank_presets_2);
+	checkForPresets(buffer, imgs.RS3_bank_presets);
+	checkForPresets(buffer, imgs.OS3_bank_presets);
 }
 
 function checkForPresets(buffer: any, bankImage: any) {
 	let pos = buffer.findSubimage(bankImage);
-	if (pos && pos.length > 0) {
-		for (let location of pos) for (let key in preset_imgs) {
+	if (pos && pos.length > 0) for (let location of pos) {
+		const disabled_img = bankImage === imgs.RS3_bank_presets ? imgs.RS3_disabled_preset : imgs.OS3_disabled_preset;
+		const preset_imgs = bankImage === imgs.RS3_bank_presets ? RS3_preset_imgs : OS3_preset_imgs;
+
+		// Show disabled preset icons
+		if (disabled_img) {
+			const presetImageData = localStorage.getItem(`disabled-presets`); // Load from base64 image in localStorage
+			const disabledPos = buffer.findSubimage(disabled_img, location.x, location.y, bankImage.width, bankImage.height);
+			if (disabledPos && disabledPos.length > 0) for (let match of disabledPos) {
+				generateOverlay(presetImageData, (ctx, canvas) => {
+					const imageString = a1lib.encodeImageString(ctx.getImageData(0, 0, canvas.width, canvas.height));
+					alt1.overLayImage(match.x, match.y, imageString, 30, 300);
+				});
+			}
+		}
+
+		// Loop through all 18 preset images and set them as the settings allow
+		if (preset_imgs) for (let key in preset_imgs) {
 			const presetImageData = localStorage.getItem(key.replace("_", "-")); // Load from base64 image in localStorage
 
 			if (presetImageData) {
 				const presetPos = buffer.findSubimage(preset_imgs[key], location.x, location.y, bankImage.width, bankImage.height);
-				if (window.alt1 && alt1.permissionOverlay && presetPos && presetPos.length > 0) for (let match of presetPos) {
-
-					const img = new Image();
-					img.src = presetImageData; // Set the source to the base64 string
-					img.onload = () => {
-						const canvas = document.createElement('canvas');
-						const targetWidth = 30; // Set to the desired width
-						const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
-
-						canvas.width = targetWidth;
-						canvas.height = targetHeight;
-
-						const ctx = canvas.getContext('2d');
-						if (ctx) {
-							ctx.drawImage(img, 0, 0, targetWidth, targetHeight); // Scale the image
-							const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Get ImageData
-
-							const imageString = a1lib.encodeImageString(imageData);
-							// Ensure the width in the overlay function is set to 30
-							alt1.overLayImage(match.x, match.y, imageString, targetWidth, 100); // Use the scaled width
-						}
-					};
-
+				if (presetPos && presetPos.length > 0) for (let match of presetPos) {
+					generateOverlay(presetImageData, (ctx, canvas) => {
+						const imageString = a1lib.encodeImageString(ctx.getImageData(0, 0, canvas.width, canvas.height));
+						alt1.overLayImage(match.x, match.y, imageString, 30, 300);
+					});
 				}
 			} else console.warn(`No image data found for [${key}]`);
 		}
 	}
 }
 
+function generateOverlay(imgBase64, f: (ctx, canvas) => void) {
+	const img = new Image();
+	img.src = imgBase64; // Set the source to the base64 string
+	img.onload = () => {
+		const canvas = document.createElement('canvas');
+		const targetWidth = 30; // Set to the desired width
+		const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+
+		canvas.width = targetWidth;
+		canvas.height = targetHeight;
+
+		const ctx = canvas.getContext('2d');
+		if (ctx) {
+			ctx.drawImage(img, 0, 0, targetWidth, targetHeight); // Scale the image
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Get ImageData
+			f(ctx, canvas);
+		}
+
+	};
+}
 
 function openSettings() {
 	const left = window.screenX + (window.innerWidth / 2) - (DEFAULT_IMAGE_WIDTH / 2);

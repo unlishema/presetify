@@ -15,6 +15,7 @@ h2 { border-top: 1px solid #000; font-size: 32px; font-weight: bold; text-align:
 /* Preset Container */ 
 .preset-container { display: flex; flex-wrap: wrap; gap: 5px; }
 .preset { background-color: rgba(0, 0, 0, 0.5); border: 1px solid #333; padding: 5px; border-radius: 5px; width: calc(50% - 15px); } 
+.disabled-presets { width: calc(100% - 5px);}
 .preset-header { display: flex; height: 48px; align-items: center; justify-content: space-between; } 
 .preset-input { display: flex; align-items: center; margin-top: 10px; } 
 .preset-file { margin-top: 10px; }
