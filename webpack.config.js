@@ -48,6 +48,7 @@ module.exports = {
                 // .htaccess file
                 //{ from: path.resolve(__dirname, 'src/.htaccess'), to: path.resolve(__dirname, 'dist/.htaccess'), toType: 'file' },
                 // Main app files
+                { from: path.resolve(__dirname, 'CNAME'), to: path.resolve(__dirname, 'dist/CNAME'), toType: 'file' },
                 { from: 'index.html', to: 'index.html' },
                 { from: 'settings.html', to: 'settings.html' },
                 { from: 'appconfig.json', to: 'appconfig.json' },
