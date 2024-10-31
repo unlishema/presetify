@@ -2820,17 +2820,19 @@ var DISABLED_PRESETS_URL = "./images/disabled-presets.png";
 var DEFAULT_IMAGE_URL = "./images/icon.png";
 var DEFAULT_IMAGE_WIDTH = 420;
 var DEFAULT_IMAGE_HEIGHT = 550;
-// Load images with webpack
+// Load base images with webpack
 var imgs = alt1__WEBPACK_IMPORTED_MODULE_0__.webpackImages({
     RS3_bank_presets: __webpack_require__(/*! ./images/data/bank/RS3_presets.data.png */ "./images/data/bank/RS3_presets.data.png"),
     RS3_disabled_preset: __webpack_require__(/*! ./images/data/bank/RS3_disabled_preset.data.png */ "./images/data/bank/RS3_disabled_preset.data.png"),
     OS3_bank_presets: __webpack_require__(/*! ./images/data/bank/OS3_presets.data.png */ "./images/data/bank/OS3_presets.data.png"),
     OS3_disabled_preset: __webpack_require__(/*! ./images/data/bank/OS3_disabled_preset.data.png */ "./images/data/bank/OS3_disabled_preset.data.png"),
 });
+// Load in RS3 Preset Images
 var RS3_preset_imgs = {};
 for (var i = 1; i <= 18; i++)
     RS3_preset_imgs["preset_".concat(i.toString().padStart(2, '0'))] = __webpack_require__("./images/data/buttons sync recursive ^\\.\\/RS3_preset_.*\\.data\\.png$")("./RS3_preset_".concat(i.toString().padStart(2, '0'), ".data.png"));
 RS3_preset_imgs = alt1__WEBPACK_IMPORTED_MODULE_0__.webpackImages(RS3_preset_imgs);
+// Load in OS3 Preset Images
 var OS3_preset_imgs = {};
 for (var i = 1; i <= 18; i++)
     OS3_preset_imgs["preset_".concat(i.toString().padStart(2, '0'))] = __webpack_require__("./images/data/buttons sync recursive ^\\.\\/OS3_preset_.*\\.data\\.png$")("./OS3_preset_".concat(i.toString().padStart(2, '0'), ".data.png"));
@@ -2902,7 +2904,7 @@ function setupEventListeners() {
     });
 }
 function loop() {
-    if (!window.alt1 || !alt1.permissionOverlay)
+    if (!window.alt1 || !alt1.permissionInstalled || !alt1.permissionOverlay || !alt1.rsActive)
         return;
     var buffer = alt1__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
     checkForPresets(buffer, imgs.RS3_bank_presets);
@@ -2977,15 +2979,10 @@ function openSettings() {
     var left = window.screenX + (window.innerWidth / 2) - (DEFAULT_IMAGE_WIDTH / 2);
     var top = window.screenY + (window.innerHeight / 2) - (DEFAULT_IMAGE_HEIGHT / 2);
     var settingsWindow = window.open("./settings.html", "_blank", "width=".concat(DEFAULT_IMAGE_WIDTH, ",height=").concat(DEFAULT_IMAGE_HEIGHT, ",left=").concat(left, ",top=").concat(top));
-    settingsWindow === null || settingsWindow === void 0 ? void 0 : settingsWindow.window.console.warn("Settings Loaded!");
     settingsWindow === null || settingsWindow === void 0 ? void 0 : settingsWindow.addEventListener('keyup', function (e) {
         if ((e.which || e.keyCode) === 116) {
             e.preventDefault(); // Prevent F5 key press from refreshing the page
         }
-    });
-    settingsWindow === null || settingsWindow === void 0 ? void 0 : settingsWindow.addEventListener('beforeunload', function () {
-        console.warn("Settings Closed!");
-        settingsWindow === null || settingsWindow === void 0 ? void 0 : settingsWindow.window.console.warn("Settings Saved!");
     });
 }
 function convertImageToBase64(url) {
