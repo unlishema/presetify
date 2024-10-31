@@ -30,9 +30,9 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            for (let i = 1; i <= 18; i++) {
+            for (let i = 0; i <= 18; i++) {
                 addPreset(i);
-                const presetData = localStorage.getItem(`preset-${getPresetIndex(i)}`);
+                const presetData = localStorage.getItem(i === 0 ? `disabled-presets` : `preset-${getPresetIndex(i)}`);
                 if (presetData) displayImage(presetData, `image-preview-${getPresetIndex(i)}`);
             }
         });
@@ -65,7 +65,7 @@
                 canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
                 const base64String = canvas.toDataURL('image/png');
-                localStorage.setItem(`preset-${getPresetIndex(index)}`, base64String);
+                localStorage.setItem(index === 0 ? `disabled-presets` : `preset-${getPresetIndex(index)}`, base64String);
                 displayImage(base64String, `image-preview-${getPresetIndex(index)}`);
             };
 
@@ -76,10 +76,11 @@
             const presetContainer = document.querySelector('.preset-container');
             const presetDiv = document.createElement('div');
             presetDiv.classList.add('preset');
+            if (index === 0) presetDiv.classList.add('disabled-presets');
 
             presetDiv.innerHTML = `
                 <div class="preset-header">
-                    <label class="nistext">Preset ${index}</label>
+                    <label class="nistext">${index === 0 ? `Disabled Presets` : `Preset ${index}`}</label>
                     <img id="image-preview-${getPresetIndex(index)}" style="display: none; max-width: 48px; max-height: 48px;" alt="Image Preview">
                 </div>
                 <div class="preset-input">
@@ -108,7 +109,7 @@
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const base64String = e.target.result;
-                        localStorage.setItem(`preset-${getPresetIndex(index)}`, base64String);
+                        localStorage.setItem(index === 0 ? `disabled-presets` : `preset-${getPresetIndex(index)}`, base64String);
                         displayImage(base64String, `image-preview-${getPresetIndex(index)}`);
                     };
                     reader.readAsDataURL(file);
