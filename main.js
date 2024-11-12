@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["sharp", "canvas", "electron/common"], factory);
 	else if(typeof exports === 'object')
-		exports["TestApp"] = factory((function webpackLoadOptionalExternalModule() { try { return require("sharp"); } catch(e) {} }()), (function webpackLoadOptionalExternalModule() { try { return require("canvas"); } catch(e) {} }()), (function webpackLoadOptionalExternalModule() { try { return require("electron/common"); } catch(e) {} }()));
+		exports["Presetify"] = factory((function webpackLoadOptionalExternalModule() { try { return require("sharp"); } catch(e) {} }()), (function webpackLoadOptionalExternalModule() { try { return require("canvas"); } catch(e) {} }()), (function webpackLoadOptionalExternalModule() { try { return require("electron/common"); } catch(e) {} }()));
 	else
-		root["TestApp"] = factory(root["sharp"], root["canvas"], root["electron/common"]);
+		root["Presetify"] = factory(root["sharp"], root["canvas"], root["electron/common"]);
 })(self, (__WEBPACK_EXTERNAL_MODULE_sharp__, __WEBPACK_EXTERNAL_MODULE_canvas__, __WEBPACK_EXTERNAL_MODULE_electron_common__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
