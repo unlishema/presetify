@@ -2818,8 +2818,8 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 var NUM_PRESETS = 18;
 var DISABLED_PRESETS_URL = "./images/disabled-presets.png";
 var DEFAULT_IMAGE_URL = "./images/icon.png";
-var DEFAULT_IMAGE_WIDTH = 420;
-var DEFAULT_IMAGE_HEIGHT = 550;
+var DEFAULT_SETTINGS_WIDTH = 420;
+var DEFAULT_SETTINGS_HEIGHT = 550;
 // Load base images with webpack
 var imgs = alt1__WEBPACK_IMPORTED_MODULE_0__.webpackImages({
     RS3_bank_presets: __webpack_require__(/*! ./images/data/bank/RS3_presets.data.png */ "./images/data/bank/RS3_presets.data.png"),
@@ -2842,7 +2842,9 @@ if (window.alt1) {
     alt1.identifyAppUrl("./appconfig.json");
 }
 else {
-    document.getElementById("addtoalt1").style.display = "block";
+    var urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('bypass_warning'))
+        document.getElementById("addtoalt1").style.display = "block";
 }
 // Initialize the app
 document.addEventListener("DOMContentLoaded", initializeApp);
@@ -2976,9 +2978,9 @@ function generateOverlay(imgBase64, f) {
     };
 }
 function openSettings() {
-    var left = window.screenX + (window.innerWidth / 2) - (DEFAULT_IMAGE_WIDTH / 2);
-    var top = window.screenY + (window.innerHeight / 2) - (DEFAULT_IMAGE_HEIGHT / 2);
-    var settingsWindow = window.open("./settings.html", "_blank", "width=".concat(DEFAULT_IMAGE_WIDTH, ",height=").concat(DEFAULT_IMAGE_HEIGHT, ",left=").concat(left, ",top=").concat(top));
+    var left = window.screenX + (window.innerWidth / 2) - (DEFAULT_SETTINGS_WIDTH / 2);
+    var top = window.screenY + (window.innerHeight / 2) - (DEFAULT_SETTINGS_HEIGHT / 2);
+    var settingsWindow = window.open("./settings.html", "_blank", "width=".concat(DEFAULT_SETTINGS_WIDTH, ",height=").concat(DEFAULT_SETTINGS_HEIGHT, ",left=").concat(left, ",top=").concat(top));
     settingsWindow === null || settingsWindow === void 0 ? void 0 : settingsWindow.addEventListener('keyup', function (e) {
         if ((e.which || e.keyCode) === 116) {
             e.preventDefault(); // Prevent F5 key press from refreshing the page
