@@ -4,8 +4,8 @@ import * as a1lib from "alt1";
 const NUM_PRESETS = 18;
 const DISABLED_PRESETS_URL = "./images/disabled-presets.png";
 const DEFAULT_IMAGE_URL = "./images/icon.png";
-const DEFAULT_IMAGE_WIDTH = 420;
-const DEFAULT_IMAGE_HEIGHT = 550;
+const DEFAULT_SETTINGS_WIDTH = 420;
+const DEFAULT_SETTINGS_HEIGHT = 550;
 
 // Load base images with webpack
 let imgs = a1lib.webpackImages({
@@ -29,7 +29,8 @@ OS3_preset_imgs = a1lib.webpackImages(OS3_preset_imgs);
 if (window.alt1) {
 	alt1.identifyAppUrl("./appconfig.json");
 } else {
-	document.getElementById("addtoalt1").style.display = "block";
+	const urlParams = new URLSearchParams(window.location.search);
+	if (!urlParams.has('bypass_warning')) document.getElementById("addtoalt1").style.display = "block";
 }
 
 // Initialize the app
@@ -134,10 +135,10 @@ function generateOverlay(imgBase64, f: (ctx, canvas) => void) {
 }
 
 function openSettings() {
-	const left = window.screenX + (window.innerWidth / 2) - (DEFAULT_IMAGE_WIDTH / 2);
-	const top = window.screenY + (window.innerHeight / 2) - (DEFAULT_IMAGE_HEIGHT / 2);
+	const left = window.screenX + (window.innerWidth / 2) - (DEFAULT_SETTINGS_WIDTH / 2);
+	const top = window.screenY + (window.innerHeight / 2) - (DEFAULT_SETTINGS_HEIGHT / 2);
 
-	const settingsWindow = window.open("./settings.html", "_blank", `width=${DEFAULT_IMAGE_WIDTH},height=${DEFAULT_IMAGE_HEIGHT},left=${left},top=${top}`);
+	const settingsWindow = window.open("./settings.html", "_blank", `width=${DEFAULT_SETTINGS_WIDTH},height=${DEFAULT_SETTINGS_HEIGHT},left=${left},top=${top}`);
 
 	settingsWindow?.addEventListener('keyup', (e) => {
 		if ((e.which || e.keyCode) === 116) {

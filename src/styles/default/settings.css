@@ -19,8 +19,6 @@ body { font-family: sans-serif; font-size: 14px; overflow-x: hidden; margin: 5px
 h2 { border-top: 1px solid #000; font-size: 32px; font-weight: bold; text-align: center; margin: 5px 0; }
 
 /* Import/Export Buttons */
-
-/* Import/Export Buttons */
 #import-export {text-align: center;}
 #export-button {margin-left: 16px;}
 #import-button {margin-left: 16px;}
