@@ -40,8 +40,11 @@ async function initializeApp() {
 	try {
 		if (window.alt1) {
 			if (!alt1.permissionInstalled) {
-				document.getElementById("addtoalt1").style.display = "block";
-				document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
+				const urlParams = new URLSearchParams(window.location.search);
+				if (!urlParams.has('bypass_warning')) {
+					document.getElementById("addtoalt1").style.display = "block";
+					document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
+				}
 			} else {
 				await setupDefaultImages();
 				setupEventListeners();
