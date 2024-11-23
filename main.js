@@ -2850,15 +2850,18 @@ else {
 document.addEventListener("DOMContentLoaded", initializeApp);
 function initializeApp() {
     return __awaiter(this, void 0, void 0, function () {
-        var error_1;
+        var urlParams, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
                     if (!window.alt1) return [3 /*break*/, 3];
                     if (!!alt1.permissionInstalled) return [3 /*break*/, 1];
-                    document.getElementById("addtoalt1").style.display = "block";
-                    document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
+                    urlParams = new URLSearchParams(window.location.search);
+                    if (!urlParams.has('bypass_warning')) {
+                        document.getElementById("addtoalt1").style.display = "block";
+                        document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
+                    }
                     return [3 /*break*/, 3];
                 case 1: return [4 /*yield*/, setupDefaultImages()];
                 case 2:
