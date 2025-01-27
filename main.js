@@ -2850,7 +2850,7 @@ else {
 document.addEventListener("DOMContentLoaded", initializeApp);
 function initializeApp() {
     return __awaiter(this, void 0, void 0, function () {
-        var urlParams, error_1;
+        var urlParams, linkElement, linkElement, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -2863,7 +2863,22 @@ function initializeApp() {
                         document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
                     }
                     return [3 /*break*/, 3];
-                case 1: return [4 /*yield*/, setupDefaultImages()];
+                case 1:
+                    // Setup Default Skin css here
+                    if (window.alt1 && window.alt1.skinName === "default") {
+                        linkElement = document.createElement('link');
+                        linkElement.rel = 'stylesheet';
+                        linkElement.href = './styles/default/index.css';
+                        document.head.appendChild(linkElement);
+                    }
+                    // Setup Legacy Skin css here
+                    if (window.alt1 && window.alt1.skinName === "legacy") {
+                        linkElement = document.createElement('link');
+                        linkElement.rel = 'stylesheet';
+                        linkElement.href = './styles/legacy/index.css';
+                        document.head.appendChild(linkElement);
+                    }
+                    return [4 /*yield*/, setupDefaultImages()];
                 case 2:
                     _a.sent();
                     setupEventListeners();
