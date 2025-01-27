@@ -46,6 +46,21 @@ async function initializeApp() {
 					document.getElementById("addtoalt1").innerHTML = "You should click <a href='https://presetify.unlishema.org'>Add App</a> at top right";
 				}
 			} else {
+				// Setup Default Skin css here
+				if (window.alt1 && window.alt1.skinName === "default") {
+					const linkElement = document.createElement('link');
+					linkElement.rel = 'stylesheet';
+					linkElement.href = './styles/default/index.css';
+					document.head.appendChild(linkElement);
+				}
+				// Setup Legacy Skin css here
+				if (window.alt1 && window.alt1.skinName === "legacy") {
+					const linkElement = document.createElement('link');
+					linkElement.rel = 'stylesheet';
+					linkElement.href = './styles/legacy/index.css';
+					document.head.appendChild(linkElement);
+				}
+
 				await setupDefaultImages();
 				setupEventListeners();
 				setInterval(loop, 100);

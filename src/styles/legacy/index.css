@@ -1,0 +1,11 @@
+/* Global App settings */
+.nis     {background: url("../../images/background-legacy.png");}
+.nistext {color: #E5E6EB;}
+a        {color: #ffffff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-decoration: underline; cursor: pointer;}
+a:hover  {color: #a19100; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-decoration: underline; cursor: pointer;}
+
+/* Main Settings */
+#addtoalt1 {position: relative; display: none;height: auto; margin: 6px auto; padding: 2px; text-align: center; color: #462e0a; background-color: rgba(182, 131, 38, 0.9); border: 2px solid #613f0c; border-radius: 8px; z-index: 36; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); font-family: Arial, sans-serif; transition: background-color 0.3s ease;}
+#menubutton {position: absolute; width: 24px; height: 24px; top: 10px; left: 10px; z-index: 11; cursor:pointer; background: url('../../images/settingscog.png') 0px 0px / cover;}
+#menubutton:hover {background-position: 0px -24px;}
+#header {position: absolute; top: 6px; right: 10px; margin: 0px; font-size: 20px; margin: 3px 10px 0px 0px;}
