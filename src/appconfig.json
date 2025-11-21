@@ -1,6 +1,6 @@
 {
 	"appName": "Presetify",
-	"description": "Presetify allows you to unleash your creativity by overlaying custom images onto your bank presets. With an intuitive interface, you can easily select images from your device and blend them seamlessly with existing designs. Whether you're personalizing a financial dashboard or enhancing visual presentations, Presetify empowers you to create unique and engaging visuals that reflect your style. Customize, modify, and make your presets truly yours—it's as simple as a few taps! Transform the way you view your presets with Presetify today.",
+	"description": "Presetify lets you customize and overlay images onto your RuneScape bank presets inside Alt1, giving your setups a clean, personalized, and visually enhanced look—perfect for organization, skilling, PvM, or just showing off your style.",
 	"appUrl": "./index.html",
 	"configUrl": "./appconfig.json",
 	"iconUrl": "./images/icon.png",
